@@ -1,0 +1,24 @@
+{
+    "name": "hexlet/code",
+    "description": "My project",
+    "type": "project",
+    "autoload": {
+        "files": []
+    },
+    "bin": [
+        "bin/gendiff"
+    ],
+    "authors": [
+        {
+            "name": "greedval"
+        }
+    ],
+    "require": {
+        "wp-cli/php-cli-tools": "^0.12.0",
+        "docopt/docopt": "^1.0"
+    },
+    "license": "proprietary",
+    "require-dev": {
+        "squizlabs/php_codesniffer": "^3.10.2"
+    }
+}

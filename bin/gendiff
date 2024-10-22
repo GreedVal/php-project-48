@@ -20,4 +20,7 @@ DOC;
 $args = Docopt::handle($doc, ['version' => 'gendiff 1.0.0']);
 
 
+$file1 = $args['<firstFile>'];
+$file2 = $args['<secondFile>'];
+
 print_r($args);

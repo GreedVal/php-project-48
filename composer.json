@@ -3,7 +3,10 @@
     "description": "My project",
     "type": "project",
     "autoload": {
-        "files": []
+        "files": [
+            "src/Differ.php",
+            "src/Parser.php"
+        ]
     },
     "bin": [
         "bin/gendiff"

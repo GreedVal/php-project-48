@@ -3,7 +3,8 @@
 namespace Differ\Parser;
 
 use Exception;
-function parse($file)
+
+function parse($file): array
 {
     if (!file_exists($file)) {
         throw new Exception("File not found: $file");

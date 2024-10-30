@@ -4,7 +4,7 @@ namespace Differ\Differ;
 
 use function Differ\Parser\parse;
 
-function genDiff($file1, $file2, $formatName = 'stylish')
+function genDiff($file1, $file2, $formatName = 'stylish'): string
 {
     $data1 = parse($file1);
     $data2 = parse($file2);

@@ -3,31 +3,44 @@
 namespace Differ\Differ;
 
 use function Differ\Parser\parse;
+use function Differ\Formatters\makeFormat;
 
 function genDiff($file1, $file2, $formatName = 'stylish'): string
 {
-    $data1 = parse($file1);
-    $data2 = parse($file2);
+    $content1 = parse($file1);
+    $content2 = parse($file2);
 
-    $keys = array_unique(array_merge(array_keys($data1), array_keys($data2)));
+    $diff = makeDiff($content1, $content2);
+
+    return makeFormat($diff, $formatName);
+}
+
+function makeDiff(array $content1, array $content2)
+{
+    $keys = array_unique(array_merge(array_keys($content1), array_keys($content2)));
     sort($keys);
+    return checkDiff($keys, $content1, $content2);
+}
 
+function checkDiff(mixed $keys, array $content1, array $content2)
+{
     $result = [];
 
     foreach ($keys as $key) {
-        if (array_key_exists($key, $data1) && array_key_exists($key, $data2)) {
-            if ($data1[$key] === $data2[$key]) {
-                continue;
-            } else {
-                $result[] = "  - $key: " . json_encode($data1[$key], JSON_PRETTY_PRINT);
-                $result[] = "  + $key: " . json_encode($data2[$key], JSON_PRETTY_PRINT);
-            }
-        } elseif (array_key_exists($key, $data1)) {
-            $result[] = "  - $key: " . json_encode($data1[$key], JSON_PRETTY_PRINT);
+        if (array_key_exists($key, $content1) && !array_key_exists($key, $content2)) {
+            $result[$key] = ['status' => 'removed', 'value' => $content1[$key]];
+        } elseif (!array_key_exists($key, $content1) && array_key_exists($key, $content2)) {
+            $result[$key] = ['status' => 'added', 'value' => $content2[$key]];
+        } elseif ($content1[$key] === $content2[$key]) {
+            $result[$key] = ['status' => 'unchanged', 'value' => $content1[$key]];
         } else {
-            $result[] = "  + $key: " . json_encode($data2[$key], JSON_PRETTY_PRINT);
+            $result[$key] = [
+                'status' => 'modified',
+                'oldValue' => $content1[$key],
+                'newValue' => $content2[$key]
+            ];
         }
     }
 
-    return "{\n" . implode("\n", $result) . "\n}";
+    return $result;
 }

@@ -8,17 +8,14 @@ use function Differ\Formatters\Json\jsonFormat;
 
 function makeFormat(array $diff, string $format): string
 {
-
     switch ($format) {
-        case '':
-            # code...
-            break;
-
+        case 'stylish':
+            return stylishFormat($diff);
+        case 'plain':
+            return plainFormat($diff);
+        case 'json':
+            return jsonFormat($diff);
         default:
-            # code...
-            break;
+            exit("No format {$format}");
     }
-
-
-    return "";
 }

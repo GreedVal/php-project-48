@@ -5,7 +5,11 @@
     "autoload": {
         "files": [
             "src/Differ.php",
-            "src/Parser.php"
+            "src/Parser.php",
+            "src/Formatters.php",
+            "src/Formatters/Json.php",
+            "src/Formatters/Plain.php",
+            "src/Formatters/Stylish.php"
         ]
     },
     "bin": [

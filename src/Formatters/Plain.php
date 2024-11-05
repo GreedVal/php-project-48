@@ -2,21 +2,46 @@
 
 namespace Differ\Formatters\Plain;
 
-function plainFormat(array $diff)
+function plainFormat(array $diff): string
+{
+    $formattedDiff = formatDiff($diff);
+    return implode("\n", $formattedDiff);
+}
+
+function formatDiff(array $diff, string $parentKey = ''): array
 {
     $result = [];
-    foreach ($diff as $key => $info) {
-        switch ($info['status']) {
+
+    foreach ($diff as $node) {
+        $key = $parentKey . ($parentKey ? '.' : '') . $node['key'];
+
+        switch ($node['status']) {
+            case 'nested':
+                $result = array_merge($result, formatDiff($node['value1'], $key));
+                break;
             case 'added':
-                $result[] = "Property '{$key}' was added with value: '{$info['value']}'";
+                $result[] = "Property '{$key}' was added with value: " . stringifyValue($node['value1']);
                 break;
             case 'removed':
                 $result[] = "Property '{$key}' was removed";
                 break;
-            case 'modified':
-                $result[] = "Property '{$key}' was updated. From '{$info['oldValue']}' to '{$info['newValue']}'";
+            case 'updated':
+                $result[] = "Property '{$key}' was updated. From " . stringifyValue($node['value1']) . " to " . stringifyValue($node['value2']);
+                break;
+            case 'same':
                 break;
         }
     }
-    return implode("\n", $result);
+    return $result;
+}
+
+function stringifyValue(mixed $value): string
+{
+    if (is_null($value))
+        return 'null';
+    if (is_bool($value))
+        return $value ? 'true' : 'false';
+    if (is_array($value))
+        return '[complex value]';
+    return "'{$value}'";
 }

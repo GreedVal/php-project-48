@@ -32,40 +32,25 @@ function checkDifference(mixed $uniqueKey, array $content1, array $content2): ar
     $value2 = $content2[$uniqueKey] ?? null;
 
     if (is_array($value1) && is_array($value2)) {
-        return [
-            'status' => 'nested',
-            'key' => $uniqueKey,
-            'value1' => makeDiff($value1, $value2),
-            'value2' => null
-        ];
+        return getArrayConfig('nested', $uniqueKey, makeDiff($value1, $value2), null);
     }
     if (!array_key_exists($uniqueKey, $content1)) {
-        return [
-            'status' => 'added',
-            'key' => $uniqueKey,
-            'value1' => $value2,
-            'value2' => null
-        ];
+        return getArrayConfig('added', $uniqueKey, $value2, null);
     }
     if (!array_key_exists($uniqueKey, $content2)) {
-        return [
-            'status' => 'removed',
-            'key' => $uniqueKey,
-            'value1' => $value1,
-            'value2' => null
-        ];
+        return getArrayConfig('removed', $uniqueKey, $value1, null);
     }
     if ($value1 === $value2) {
-        return [
-            'status' => 'same',
-            'key' => $uniqueKey,
-            'value1' => $value1,
-            'value2' => null
-        ];
+        return getArrayConfig('same', $uniqueKey, $value1, null);
     }
+    return getArrayConfig('updated', $uniqueKey, $value1, $value2);
+}
+
+function getArrayConfig($status, $key, $value1, $value2)
+{
     return [
-        'status' => 'updated',
-        'key' => $uniqueKey,
+        'status' => $status,
+        'key' => $key,
         'value1' => $value1,
         'value2' => $value2
     ];

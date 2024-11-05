@@ -37,11 +37,14 @@ function formatDiff(array $diff, string $parentKey = ''): array
 
 function stringifyValue(mixed $value): string
 {
-    if (is_null($value))
+    if (is_null($value)) {
         return 'null';
-    if (is_bool($value))
+    }
+    if (is_bool($value)) {
         return $value ? 'true' : 'false';
-    if (is_array($value))
+    }
+    if (is_array($value)) {
         return '[complex value]';
+    }
     return "'{$value}'";
 }

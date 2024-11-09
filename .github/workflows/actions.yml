@@ -19,15 +19,18 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: "8.3"
-      - name: Install
+
+      - name: Install dependencies
         run: make install
+
       - name: Run linter
         run: make lint
-      - name: Run test & publish code coverage
+
+      - name: Run tests & publish code coverage
         uses: paambaati/codeclimate-action@v5.0.0
         env:
-          CC_TEST_REPORTER_ID: ${{ 4a9bd9747fae896f132fc43d78f8039eb389287e3818ff56efac0378af1787f0 }}
+          CC_TEST_REPORTER_ID: "4a9bd9747fae896f132fc43d78f8039eb389287e3818ff56efac0378af1787f0"
         with:
           coverageCommand: make test-coverage
-          coverageLocations: ${{github.workplace}}/build/logs/clover.xml:clover
+          coverageLocations: ${{ github.workspace }}/build/logs/clover.xml:clover
           debug: true

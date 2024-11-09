@@ -32,21 +32,21 @@ function checkDifference(mixed $uniqueKey, array $content1, array $content2): ar
     $value2 = $content2[$uniqueKey] ?? null;
 
     if (is_array($value1) && is_array($value2)) {
-        return getArrayConfig('nested', $uniqueKey, makeDiff($value1, $value2), null);
+        return getArrayConfig('nested', $uniqueKey, makeDiff($value1, $value2));
     }
     if (!array_key_exists($uniqueKey, $content1)) {
-        return getArrayConfig('added', $uniqueKey, $value2, null);
+        return getArrayConfig('added', $uniqueKey, $value2);
     }
     if (!array_key_exists($uniqueKey, $content2)) {
-        return getArrayConfig('removed', $uniqueKey, $value1, null);
+        return getArrayConfig('removed', $uniqueKey, $value1);
     }
     if ($value1 === $value2) {
-        return getArrayConfig('same', $uniqueKey, $value1, null);
+        return getArrayConfig('same', $uniqueKey, $value1);
     }
     return getArrayConfig('updated', $uniqueKey, $value1, $value2);
 }
 
-function getArrayConfig($status, $key, $value1, $value2)
+function getArrayConfig($status, $key, $value1 = null, $value2 = null)
 {
     return [
         'status' => $status,

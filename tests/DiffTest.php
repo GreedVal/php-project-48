@@ -10,40 +10,26 @@ class GenDiffTest extends TestCase
 {
     public function testGenDiff()
     {
-        $fixture1 = $this->getPathToFixture('file1.json');
-        $fixture2 = $this->getPathToFixture('file2.json');
-        $actual = genDiff($fixture1, $fixture2, 'stylish');
-        $expected = file_get_contents($this->getPathToFixture('expectedStylish'));
-        $this->assertEquals($expected, $actual);
+        $this->checkDiff('file1.json', 'file2.json', 'expectedStylish', 'stylish');
+        $this->checkDiff('file1.yaml', 'file2.yaml', 'expectedStylish', 'stylish');
 
-        $fixture1 = $this->getPathToFixture('file1.yaml');
-        $fixture2 = $this->getPathToFixture('file2.yaml');
-        $actual = genDiff($fixture1, $fixture2, 'stylish');
-        $expected = file_get_contents($this->getPathToFixture('expectedStylish'));
-        $this->assertEquals($expected, $actual);
+        $this->checkDiff('file1.json', 'file2.json', 'expectedPlain', 'plain');
+        $this->checkDiff('file1.yaml', 'file2.yaml', 'expectedPlain', 'plain');
 
-        $fixture1 = $this->getPathToFixture('file1.json');
-        $fixture2 = $this->getPathToFixture('file2.json');
-        $actual = genDiff($fixture1, $fixture2, 'plain');
-        $expected = file_get_contents($this->getPathToFixture('expectedPlain'));
-        $this->assertEquals($expected, $actual);
+        $this->checkDiff('file1.json', 'file2.json', 'expectedJson', 'json');
+        $this->checkDiff('file1.yaml', 'file2.yaml', 'expectedJson', 'json');
+    }
 
-        $fixture1 = $this->getPathToFixture('file1.yaml');
-        $fixture2 = $this->getPathToFixture('file2.yaml');
-        $actual = genDiff($fixture1, $fixture2, 'plain');
-        $expected = file_get_contents($this->getPathToFixture('expectedPlain'));
-        $this->assertEquals($expected, $actual);
+    private function checkDiff($fixture1Name, $fixture2Name, $expectedFileName, $format)
+    {
+        $fixture1 = $this->getPathToFixture($fixture1Name);
+        $fixture2 = $this->getPathToFixture($fixture2Name);
+        $actual = genDiff($fixture1, $fixture2, $format);
+        $expected = file_get_contents($this->getPathToFixture($expectedFileName));
 
-        $fixture1 = $this->getPathToFixture('file1.json');
-        $fixture2 = $this->getPathToFixture('file2.json');
-        $actual = genDiff($fixture1, $fixture2, 'json');
-        $expected = file_get_contents($this->getPathToFixture('expectedJson'));
-        $this->assertEquals($expected, $actual);
+        $expected = str_replace("\r\n", "\n", $expected);
+        $actual = str_replace("\r\n", "\n", $actual);
 
-        $fixture1 = $this->getPathToFixture('file1.yaml');
-        $fixture2 = $this->getPathToFixture('file2.yaml');
-        $actual = genDiff($fixture1, $fixture2, 'json');
-        $expected = file_get_contents($this->getPathToFixture('expectedJson'));
         $this->assertEquals($expected, $actual);
     }
 

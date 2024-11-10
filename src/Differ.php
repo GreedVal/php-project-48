@@ -78,7 +78,7 @@ function recursiveSort(array $array): array
 
 function insertSorted($element, array $sortedArray): array
 {
-    if (empty($sortedArray) || $element <= $sortedArray[0]) {
+    if (count($sortedArray) === 0 || $element <= $sortedArray[0]) {
         return array_merge([$element], $sortedArray);
     }
 

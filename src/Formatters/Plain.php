@@ -2,6 +2,8 @@
 
 namespace Differ\Formatters\Plain;
 
+use function Functional\flatten;
+
 use Exception;
 
 function plainFormat(array $diff): string
@@ -10,41 +12,34 @@ function plainFormat(array $diff): string
     return implode("\n", $formattedDiff);
 }
 
-function formatDiff(array $diff, string $parentKey = ''): array
+function formatDiff(array $diff, string $path = ''): array
 {
-    $result = [];
+    $callback = function ($node) use ($path) {
+        list('status' => $status, 'key' => $key, 'value1' => $value1, 'value2' => $value2) = $node;
+        $fullPath = "{$path}{$key}";
 
-    if (empty($diff)) {
-        return $result;
-    }
-
-    $node = array_shift($diff);
-    $parentKeyTwo = $parentKey ? '.' : '';
-    $key = "{$parentKey}{$parentKeyTwo}{$node['key']}";
-
-    $strValue1 = stringifyValue($node['value1'] ?? null);
-    $strValue2 = stringifyValue($node['value2'] ?? null);
-
-    switch ($node['status']) {
-        case 'nested':
-            $nestedResult = formatDiff($node['value1'], $key);
-            $result = array_merge($result, $nestedResult);
-            break;
-        case 'added':
-            $result[] = "Property '{$key}' was added with value: {$strValue1}";
-            break;
-        case 'removed':
-            $result[] = "Property '{$key}' was removed";
-            break;
-        case 'updated':
-            $result[] = "Property '{$key}' was updated. From {$strValue1} to {$strValue2}";
-            break;
-        case 'same':
-            break;
-        default:
-            throw new Exception("NAN error plain");
-    }
-    return array_merge($result, formatDiff($diff, $parentKey));
+        switch ($status) {
+            case 'nested':
+                return formatDiff($value1, "{$path}{$key}.");
+            case 'added':
+                $stringifiedValue1 = stringifyValue($value1);
+                return "Property '{$fullPath}' was added with value: {$stringifiedValue1}";
+            case 'removed':
+                return "Property '{$fullPath}' was removed";
+            case 'updated':
+                $stringifiedValue1 = stringifyValue($value1);
+                $stringifiedValue2 = stringifyValue($value2);
+                return "Property '{$fullPath}' was updated. From {$stringifiedValue1} to {$stringifiedValue2}";
+            case 'same':
+                return;
+            default:
+                throw new Exception("Unsupported format of file!");
+        }
+    };
+    $arrayOfDifferences = flatten(array_map($callback, $diff));
+    return array_filter($arrayOfDifferences, function ($valueOfDifference) {
+        return !is_null($valueOfDifference);
+    });
 }
 
 function stringifyValue(mixed $value): string

@@ -15,12 +15,13 @@ function formatDiff(array $diff, string $parentKey = ''): array
     foreach ($diff as $node) {
         $key = $parentKey . ($parentKey ? '.' : '') . $node['key'];
 
-        $strValue1 = $strValue1 = stringifyValue($node['value1']);
+        $strValue1 = stringifyValue($node['value1']);
         $strValue2 = stringifyValue($node['value2']);
 
         switch ($node['status']) {
             case 'nested':
-                $result = array_merge($result, formatDiff($node['value1'], $key));
+                $nestedResult = formatDiff($node['value1'], $key);
+                $result = array_merge($result, $nestedResult);
                 break;
             case 'added':
                 $result[] = "Property '{$key}' was added with value: {$strValue1}";

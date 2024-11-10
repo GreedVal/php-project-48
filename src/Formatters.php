@@ -2,9 +2,10 @@
 
 namespace Differ\Formatters;
 
-use function Differ\Formatters\Stylish\stylishFormat;
-use function Differ\Formatters\Plain\plainFormat;
+use Exception;
 use function Differ\Formatters\Json\jsonFormat;
+use function Differ\Formatters\Plain\plainFormat;
+use function Differ\Formatters\Stylish\stylishFormat;
 
 function makeFormat(array $diff, string $format): string
 {
@@ -16,6 +17,6 @@ function makeFormat(array $diff, string $format): string
         case 'json':
             return jsonFormat($diff);
         default:
-            exit("No format {$format}");
+            throw new Exception("No format");
     }
 }

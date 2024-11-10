@@ -5,7 +5,7 @@ namespace Differ\Differ;
 use function Differ\Parser\parse;
 use function Differ\Formatters\makeFormat;
 
-function genDiff($file1, $file2, $formatName = 'stylish'): string
+function genDiff(string $file1, string $file2, string $formatName = 'stylish'): string
 {
     $content1 = parse($file1);
     $content2 = parse($file2);
@@ -46,7 +46,7 @@ function checkDifference(mixed $uniqueKey, array $content1, array $content2): ar
     return getArrayConfig('updated', $uniqueKey, $value1, $value2);
 }
 
-function getArrayConfig($status, $key, $value1 = null, $value2 = null)
+function getArrayConfig(string $status, string $key, mixed $value1 = null, mixed $value2 = null)
 {
     return [
         'status' => $status,

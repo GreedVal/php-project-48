@@ -24,19 +24,21 @@ function formatNode(array $node, string $spaces, int $nextLevel): string
 {
     ['status' => $status, 'key' => $key] = $node;
 
+    $strValue = stringifyValue($node['value1'], $nextLevel);
+
     switch ($status) {
         case 'nested':
             return formatNested($key, $node['value1'], $spaces, $nextLevel);
         case 'same':
-            return "{$spaces}    {$key}: " . stringifyValue($node['value1'], $nextLevel);
+            return "{$spaces}    {$key}: {$strValue}";
         case 'added':
-            return "{$spaces}  + {$key}: " . stringifyValue($node['value1'], $nextLevel);
+            return "{$spaces}  + {$key}: {$strValue}";
         case 'removed':
-            return "{$spaces}  - {$key}: " . stringifyValue($node['value1'], $nextLevel);
+            return "{$spaces}  - {$key}: {$strValue}";
         case 'updated':
             return formatUpdated($node, $spaces, $nextLevel);
         default:
-            throw new Exception("NAN");
+            throw new Exception("NAN error stylish format");
     }
 }
 
@@ -73,7 +75,7 @@ function stringifyValue(mixed $value, int $level): mixed
         return "{{$result}\n{$spaces}}";
     }
 
-    return is_string($value) ? "{$value}" : "{$value}";
+    return $value;
 }
 
 function convertArrayToString(array $value, int $level): string

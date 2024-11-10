@@ -2,6 +2,8 @@
 
 namespace Differ\Formatters\Plain;
 
+use Exception;
+
 function plainFormat(array $diff): string
 {
     $formattedDiff = formatDiff($diff);
@@ -36,6 +38,8 @@ function formatDiff(array $diff, string $parentKey = ''): array
                 break;
             case 'same':
                 break;
+            default:
+                throw new Exception("NAN no same");
         }
     }, $diff);
 

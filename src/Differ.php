@@ -60,8 +60,23 @@ function getSortedUniqueKeys(array $content1, array $content2): array
 {
     $uniqueKeys = array_values(array_unique(array_merge(array_keys($content1), array_keys($content2))));
 
-    $sortedKeys = array_slice($uniqueKeys, 0);
-    sort($sortedKeys);
+    $sortedKeys = array_reduce($uniqueKeys, function ($acc, $item) {
+        $inserted = false;
+
+        foreach ($acc as $i => $value) {
+            if ($item < $value) {
+                array_splice($acc, $i, 0, [$item]);
+                $inserted = true;
+                break;
+            }
+        }
+
+        if (!$inserted) {
+            $acc[] = $item;
+        }
+
+        return $acc;
+    }, []);
 
     return $sortedKeys;
 }

@@ -23,13 +23,13 @@ function formatDiff(array $diff, string $parentKey = ''): array
                 $result = array_merge($result, formatDiff($node['value1'], $key));
                 break;
             case 'added':
-                $result[] = "Property '{$key}' was added with value: {$strValue1}";
+                $result[] = "Property '{$key}' was added with value: '{$strValue1}'";
                 break;
             case 'removed':
                 $result[] = "Property '{$key}' was removed";
                 break;
             case 'updated':
-                $result[] = "Property '{$key}' was updated. From {$strValue1} to {$strValue2}";
+                $result[] = "Property '{$key}' was updated. From '{$strValue1}' to '{$strValue2}'";
                 break;
             case 'same':
                 break;

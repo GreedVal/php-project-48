@@ -3,6 +3,7 @@
 namespace Differ\Formatters;
 
 use Exception;
+
 use function Differ\Formatters\Json\jsonFormat;
 use function Differ\Formatters\Plain\plainFormat;
 use function Differ\Formatters\Stylish\stylishFormat;

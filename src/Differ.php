@@ -60,7 +60,8 @@ function getSortedUniqueKeys(array $content1, array $content2): array
 {
     $keys = array_merge(array_keys($content1), array_keys($content2));
     $uniqueKeys = array_unique($keys);
-    sort($uniqueKeys);
+    $sortedUniqueKeys = $uniqueKeys;
+    sort($sortedUniqueKeys);
 
-    return $uniqueKeys;
+    return $sortedUniqueKeys;
 }

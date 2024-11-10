@@ -58,10 +58,10 @@ function getArrayConfig(string $status, string $key, mixed $value1 = null, mixed
 
 function getSortedUniqueKeys(array $content1, array $content2): array
 {
-    $mergedKeys = array_merge(array_keys($content1), array_keys($content2));
-    $uniqueKeys = array_unique($mergedKeys);
+    $uniqueKeys = array_values(array_unique(array_merge(array_keys($content1), array_keys($content2))));
 
-    usort($uniqueKeys, fn($left, $right) => strcmp($left, $right));
+    $sortedKeys = array_slice($uniqueKeys, 0);
+    sort($sortedKeys);
 
-    return $uniqueKeys;
+    return $sortedKeys;
 }

@@ -13,7 +13,9 @@ function formatDiff(array $diff, string $parentKey = ''): array
     $result = [];
 
     array_map(function ($node) use (&$result, $parentKey) {
-        $key = $parentKey . ($parentKey ? '.' : '') . $node['key'];
+        $parentKeyTwo = $parentKey ? '.' : '';
+
+        $key = "{$parentKey}{$parentKeyTwo}{$node['key']}";
 
         $strValue1 = stringifyValue($node['value1']);
         $strValue2 = stringifyValue($node['value2']);

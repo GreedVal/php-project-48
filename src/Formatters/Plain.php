@@ -2,9 +2,9 @@
 
 namespace Differ\Formatters\Plain;
 
-use function Functional\flatten;
-
 use Exception;
+
+use function Functional\flatten;
 
 function plainFormat(array $diff): string
 {

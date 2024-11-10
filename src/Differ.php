@@ -59,24 +59,28 @@ function getArrayConfig(string $status, string $key, mixed $value1 = null, mixed
 function getSortedUniqueKeys(array $content1, array $content2): array
 {
     $uniqueKeys = array_values(array_unique(array_merge(array_keys($content1), array_keys($content2))));
+    return recursiveSort($uniqueKeys);
+}
 
-    $sortedKeys = array_reduce($uniqueKeys, function ($acc, $item) {
-        $inserted = false;
+function recursiveSort(array $array): array
+{
+    if (count($array) <= 1) {
+        return $array;
+    }
 
-        foreach ($acc as $i => $value) {
-            if ($item < $value) {
-                array_splice($acc, $i, 0, [$item]);
-                $inserted = true;
-                break;
-            }
-        }
+    $first = $array[0];
+    $rest = array_slice($array, 1);
 
-        if (!$inserted) {
-            $acc[] = $item;
-        }
+    $sortedRest = recursiveSort($rest);
 
-        return $acc;
-    }, []);
+    return insertSorted($first, $sortedRest);
+}
 
-    return $sortedKeys;
+function insertSorted($element, array $sortedArray): array
+{
+    if (empty($sortedArray) || $element <= $sortedArray[0]) {
+        return array_merge([$element], $sortedArray);
+    }
+
+    return array_merge([$sortedArray[0]], insertSorted($element, array_slice($sortedArray, 1)));
 }

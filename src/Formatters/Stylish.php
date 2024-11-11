@@ -7,7 +7,8 @@ use Exception;
 function stylishFormat(array $diff): string
 {
     $formattedDiff = makeStringsFromDiff($diff);
-    return "{\n" . implode("\n", $formattedDiff) . "\n}";
+    $implode = implode("\n", $formattedDiff);
+    return "{\n{$implode}\n}";
 }
 
 function makeStringsFromDiff(array $diff, int $level = 0): array
@@ -45,7 +46,8 @@ function formatNode(array $node, string $spaces, int $nextLevel): string
 function formatNested(string $key, array $value, string $spaces, int $nextLevel): string
 {
     $nested = makeStringsFromDiff($value, $nextLevel);
-    return "{$spaces}    {$key}: {\n" . implode("\n", $nested) . "\n{$spaces}    }";
+    $implode = implode("\n", $nested);
+    return "{$spaces}    {$key}: {\n{$implode}\n{$spaces}    }";
 }
 
 function formatUpdated(array $node, string $spaces, int $nextLevel): string
@@ -82,6 +84,8 @@ function convertArrayToString(array $value, int $level): string
 {
     $nextLevel = $level + 1;
     return implode('', array_map(function ($key) use ($value, $nextLevel) {
-        return "\n" . getSpaces($nextLevel) . "{$key}: " . stringifyValue($value[$key], $nextLevel);
+        $stringValue = stringifyValue($value[$key], $nextLevel);
+        $spaces = getSpaces($nextLevel);
+        return "\n{$spaces}{$key}: {$stringValue}";
     }, array_keys($value)));
 }

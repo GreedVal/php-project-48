@@ -30,7 +30,7 @@ class GenDiffTest extends TestCase
         $expected = str_replace("\r\n", "\n", $expected);
         $actual = str_replace("\r\n", "\n", $actual);
 
-        $this->assertEquals($expected, $actual);
+        $this->assertSame($expected, $actual);
     }
 
     private function getPathToFixture($fixtureName)

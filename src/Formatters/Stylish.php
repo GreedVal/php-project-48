@@ -25,29 +25,21 @@ function formatNode(array $node, string $spaces, int $nextLevel): string
     ['status' => $status, 'key' => $key] = $node;
 
     $strValue = stringifyValue($node['value1'], $nextLevel);
-    $formattedString = '';
 
     switch ($status) {
         case 'nested':
-            $formattedString = formatNested($key, $node['value1'], $spaces, $nextLevel);
-            break;
+            return formatNested($key, $node['value1'], $spaces, $nextLevel);
         case 'same':
-            $formattedString = "{$spaces}    {$key}: {$strValue}";
-            break;
+            return "{$spaces}    {$key}: {$strValue}";
         case 'added':
-            $formattedString = "{$spaces}  + {$key}: {$strValue}";
-            break;
+            return "{$spaces}  + {$key}: {$strValue}";
         case 'removed':
-            $formattedString = "{$spaces}  - {$key}: {$strValue}";
-            break;
+            return "{$spaces}  - {$key}: {$strValue}";
         case 'updated':
-            $formattedString = formatUpdated($node, $spaces, $nextLevel);
-            break;
+            return formatUpdated($node, $spaces, $nextLevel);
         default:
             throw new Exception("NAN error stylish format");
     }
-
-    return $formattedString;
 }
 
 function formatNested(string $key, array $value, string $spaces, int $nextLevel): string

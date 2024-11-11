@@ -14,47 +14,59 @@ function plainFormat(array $diff): string
 
 function formatDiff(array $diff, string $path = ''): array
 {
-    $callback = function ($node) use ($path) {
+    $result = [];
+
+    $callback = function ($node) use ($path, &$result) {
         list('status' => $status, 'key' => $key, 'value1' => $value1, 'value2' => $value2) = $node;
         $fullPath = "{$path}{$key}";
 
         switch ($status) {
             case 'nested':
-                return formatDiff($value1, "{$path}{$key}.");
+                $result = array_merge($result, formatDiff($value1, "{$path}{$key}."));
+                break;
             case 'added':
                 $stringifiedValue1 = stringifyValue($value1);
-                return "Property '{$fullPath}' was added with value: {$stringifiedValue1}";
+                $result[] = "Property '{$fullPath}' was added with value: {$stringifiedValue1}";
+                break;
             case 'removed':
-                return "Property '{$fullPath}' was removed";
+                $result[] = "Property '{$fullPath}' was removed";
+                break;
             case 'updated':
                 $stringifiedValue1 = stringifyValue($value1);
                 $stringifiedValue2 = stringifyValue($value2);
-                return "Property '{$fullPath}' was updated. From {$stringifiedValue1} to {$stringifiedValue2}";
+                $result[] = "Property '{$fullPath}' was updated. From {$stringifiedValue1} to {$stringifiedValue2}";
+                break;
             case 'same':
-                return;
+                break;
             default:
                 throw new Exception("Unsupported format of file!");
         }
     };
-    $arrayOfDifferences = flatten(array_map($callback, $diff));
-    return array_filter($arrayOfDifferences, function ($valueOfDifference) {
+
+    array_map($callback, $diff);
+
+    $result = array_filter($result, function ($valueOfDifference) {
         return !is_null($valueOfDifference);
     });
+
+    return $result;
 }
 
 function stringifyValue(mixed $value): string
 {
+    $result = '';
+
     if (is_null($value)) {
-        return 'null';
+        $result = 'null';
+    } elseif (is_bool($value)) {
+        $result = $value ? 'true' : 'false';
+    } elseif (is_array($value)) {
+        $result = '[complex value]';
+    } elseif (is_numeric($value)) {
+        $result = (string) $value;
+    } else {
+        $result = "'{$value}'";
     }
-    if (is_bool($value)) {
-        return $value ? 'true' : 'false';
-    }
-    if (is_array($value)) {
-        return '[complex value]';
-    }
-    if (is_numeric($value)) {
-        return (string) $value;
-    }
-    return "'{$value}'";
+
+    return $result;
 }

@@ -1,7 +1,7 @@
 {
     "name": "hexlet/code",
     "description": "My project",
-    "type": "project",
+    "type": "library",
     "autoload": {
         "files": [
             "src/Differ.php",

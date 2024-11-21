@@ -31,7 +31,7 @@ function formatDiff(array $diff, string $path = ''): array
                 $stringifiedValue2 = stringifyValue($value2);
                 return "Property '{$fullPath}' was updated. From {$stringifiedValue1} to {$stringifiedValue2}";
             case 'same':
-                return;
+                return null;
             default:
                 throw new Exception("Unsupported format of file!");
         }

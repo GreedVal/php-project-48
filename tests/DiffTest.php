@@ -23,7 +23,7 @@ class GenDiffTest extends TestCase
         $this->assertStringEqualsFile($expectedPath, genDiff($fixture1, $fixture2, $format));
     }
 
-    public function diffDataProvider()
+    public static function diffDataProvider()
     {
         return [
             ['file1.json', 'file2.json', 'expectedStylish', 'stylish'],

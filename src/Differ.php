@@ -3,6 +3,7 @@
 namespace Differ\Differ;
 
 use Exception;
+
 use function Differ\Parser\parse;
 use function Differ\Formatters\makeFormat;
 use function Functional\sort;

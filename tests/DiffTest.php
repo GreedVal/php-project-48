@@ -8,6 +8,12 @@ use function Differ\Differ\genDiff;
 
 class GenDiffTest extends TestCase
 {
+    /**
+     * инициализирую провайдер.
+     *
+     * @dataProvider diffDataProvider
+     */
+
     public function testGenDiff($fixture1Name, $fixture2Name, $expectedFileName, $format)
     {
         $fixture1 = $this->getPathToFixture($fixture1Name);

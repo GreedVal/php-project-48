@@ -24,16 +24,26 @@ class GenDiffTest extends TestCase
             ['file1.yaml', 'file2.yaml', 'expectedStylish', 'stylish'],
             ['file1.json', 'file2.yaml', 'expectedStylish', 'stylish'],
             ['file1.yaml', 'file2.json', 'expectedStylish', 'stylish'],
+            ['file1.yml', 'file2.yml', 'expectedStylish', 'stylish'],
+            ['file1.json', 'file2.yml', 'expectedStylish', 'stylish'],
+            ['file1.yml', 'file2.json', 'expectedStylish', 'stylish'],
 
             ['file1.json', 'file2.json', 'expectedPlain', 'plain'],
             ['file1.yaml', 'file2.yaml', 'expectedPlain', 'plain'],
             ['file1.json', 'file2.yaml', 'expectedPlain', 'plain'],
             ['file1.yaml', 'file2.json', 'expectedPlain', 'plain'],
+            ['file1.yml', 'file2.yml', 'expectedPlain', 'plain'],
+            ['file1.json', 'file2.yml', 'expectedPlain', 'plain'],
+            ['file1.yml', 'file2.json', 'expectedPlain', 'plain'],
 
             ['file1.json', 'file2.json', 'expectedJson', 'json'],
             ['file1.yaml', 'file2.yaml', 'expectedJson', 'json'],
             ['file1.json', 'file2.yaml', 'expectedJson', 'json'],
             ['file1.yaml', 'file2.json', 'expectedJson', 'json'],
+            ['file1.yml', 'file2.yml', 'expectedJson', 'json'],
+            ['file1.json', 'file2.yml', 'expectedJson', 'json'],
+            ['file1.yml', 'file2.json', 'expectedJson', 'json'],
+
         ];
     }
 

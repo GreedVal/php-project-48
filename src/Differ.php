@@ -29,7 +29,7 @@ function makeDiff(array $content1, array $content2): array
     return array_map($callback, $uniqueKeys);
 }
 
-function checkDifference(mixed $uniqueKey, array $content1, array $content2): array
+function checkDifference(string $uniqueKey, array $content1, array $content2): array
 {
     $value1 = $content1[$uniqueKey] ?? null;
     $value2 = $content2[$uniqueKey] ?? null;

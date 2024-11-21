@@ -6,7 +6,7 @@ use Exception;
 
 use function Functional\flatten;
 
-function plainFormat(array $diff): string
+function format(array $diff): string
 {
     $formattedDiff = formatDiff($diff);
     return implode("\n", $formattedDiff);

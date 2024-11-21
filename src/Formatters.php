@@ -4,9 +4,9 @@ namespace Differ\Formatters;
 
 use Exception;
 
-use function Differ\Formatters\Json\jsonFormat;
-use function Differ\Formatters\Plain\plainFormat;
-use function Differ\Formatters\Stylish\stylishFormat;
+use function Differ\Formatters\Json\format as stylishFormat;
+use function Differ\Formatters\Plain\format as plainFormat;
+use function Differ\Formatters\Stylish\format as jsonFormat;
 
 function makeFormat(array $diff, string $format): string
 {

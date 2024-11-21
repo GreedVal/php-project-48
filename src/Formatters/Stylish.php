@@ -4,7 +4,7 @@ namespace Differ\Formatters\Stylish;
 
 use Exception;
 
-function stylishFormat(array $diff): string
+function format(array $diff): string
 {
     $formattedDiff = makeStringsFromDiff($diff);
     $implode = implode("\n", $formattedDiff);

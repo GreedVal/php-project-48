@@ -8,29 +8,33 @@ use function Differ\Differ\genDiff;
 
 class GenDiffTest extends TestCase
 {
-    public function testGenDiff()
-    {
-        $this->checkDiff('file1.json', 'file2.json', 'expectedStylish', 'stylish');
-        $this->checkDiff('file1.yaml', 'file2.yaml', 'expectedStylish', 'stylish');
-
-        $this->checkDiff('file1.json', 'file2.json', 'expectedPlain', 'plain');
-        $this->checkDiff('file1.yaml', 'file2.yaml', 'expectedPlain', 'plain');
-
-        $this->checkDiff('file1.json', 'file2.json', 'expectedJson', 'json');
-        $this->checkDiff('file1.yaml', 'file2.yaml', 'expectedJson', 'json');
-    }
-
-    private function checkDiff($fixture1Name, $fixture2Name, $expectedFileName, $format)
+    public function testGenDiff($fixture1Name, $fixture2Name, $expectedFileName, $format)
     {
         $fixture1 = $this->getPathToFixture($fixture1Name);
         $fixture2 = $this->getPathToFixture($fixture2Name);
-        $actual = genDiff($fixture1, $fixture2, $format);
-        $expected = file_get_contents($this->getPathToFixture($expectedFileName));
+        $expectedPath = $this->getPathToFixture($expectedFileName);
 
-        $expected = str_replace("\r\n", "\n", $expected);
-        $actual = str_replace("\r\n", "\n", $actual);
+        $this->assertStringEqualsFile($expectedPath, genDiff($fixture1, $fixture2, $format));
+    }
 
-        $this->assertSame($expected, $actual);
+    public function diffDataProvider()
+    {
+        return [
+            ['file1.json', 'file2.json', 'expectedStylish', 'stylish'],
+            ['file1.yaml', 'file2.yaml', 'expectedStylish', 'stylish'],
+            ['file1.json', 'file2.yaml', 'expectedStylish', 'stylish'],
+            ['file1.yaml', 'file2.json', 'expectedStylish', 'stylish'],
+
+            ['file1.json', 'file2.json', 'expectedPlain', 'plain'],
+            ['file1.yaml', 'file2.yaml', 'expectedPlain', 'plain'],
+            ['file1.json', 'file2.yaml', 'expectedPlain', 'plain'],
+            ['file1.yaml', 'file2.json', 'expectedPlain', 'plain'],
+
+            ['file1.json', 'file2.json', 'expectedJson', 'json'],
+            ['file1.yaml', 'file2.yaml', 'expectedJson', 'json'],
+            ['file1.json', 'file2.yaml', 'expectedJson', 'json'],
+            ['file1.yaml', 'file2.json', 'expectedJson', 'json'],
+        ];
     }
 
     private function getPathToFixture($fixtureName)

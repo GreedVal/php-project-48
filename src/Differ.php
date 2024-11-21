@@ -2,13 +2,15 @@
 
 namespace Differ\Differ;
 
+use Exception;
 use function Differ\Parser\parse;
 use function Differ\Formatters\makeFormat;
 
 function genDiff(string $file1, string $file2, string $formatName = 'stylish'): string
 {
-    $content1 = parse($file1);
-    $content2 = parse($file2);
+
+    $content1 = parse(getFileContentAndPath($file1));
+    $content2 = parse(getFileContentAndPath($file2));
 
     $diff = makeDiff($content1, $content2);
 
@@ -83,4 +85,22 @@ function insertSorted(mixed $element, array $sortedArray): array
     }
 
     return array_merge([$sortedArray[0]], insertSorted($element, array_slice($sortedArray, 1)));
+}
+
+function getFileContentAndPath(string $file): array
+{
+    if (!file_exists($file)) {
+        throw new Exception("File not found: {$file}");
+    }
+    $path = pathinfo($file, PATHINFO_EXTENSION);
+    $content = file_get_contents($file);
+
+    if ($content === false) {
+        throw new Exception("Unable to read file: {$file}");
+    }
+
+    return [
+        'path' => $path,
+        'content' => $content
+    ];
 }

@@ -5,33 +5,15 @@ namespace Differ\Parser;
 use Exception;
 use Symfony\Component\Yaml\Yaml;
 
-function parse(string $file): array
+function parse(array $fileData): array
 {
-    $content = getFileContent($file);
-    $path = pathinfo($file, PATHINFO_EXTENSION);
-
-    switch ($path) {
+    switch ($fileData['path']) {
         case 'json':
-            return json_decode($content, true);
+            return json_decode($fileData['content'], true);
         case 'yml':
         case 'yaml':
-            return Yaml::parse($content);
+            return Yaml::parse($fileData['content']);
         default:
             throw new Exception("Unsupported format of file!");
     }
-}
-
-function getFileContent(string $file): string
-{
-    if (!file_exists($file)) {
-        throw new Exception("File not found: {$file}");
-    }
-
-    $content = file_get_contents($file);
-
-    if ($content === false) {
-        throw new Exception("Unable to read file: {$file}");
-    }
-
-    return $content;
 }

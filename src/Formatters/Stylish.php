@@ -49,7 +49,7 @@ function formatNested(string $key, array $value, string $spaces, int $nextLevel)
 {
     $nested = makeStringsFromDiff($value, $nextLevel);
     $implode = implode("\n", $nested);
-    return "{$spaces}{$key}: {\n{$implode}\n{$spaces}    }";
+    return "{$spaces}{$key}: {\n{$implode}\n{$spaces}}";
 }
 
 function formatUpdated(array $node, string $spaces, int $nextLevel): string

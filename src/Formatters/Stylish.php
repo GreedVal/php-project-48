@@ -4,6 +4,8 @@ namespace Differ\Formatters\Stylish;
 
 use Exception;
 
+const INDENT_SIZE = 4;
+const INDENT_SYMBOL = ' ';
 function format(array $diff): string
 {
     $formattedDiff = makeStringsFromDiff($diff);
@@ -31,11 +33,11 @@ function formatNode(array $node, string $spaces, int $nextLevel): string
         case 'nested':
             return formatNested($key, $node['value1'], $spaces, $nextLevel);
         case 'same':
-            return "{$spaces}    {$key}: {$strValue}";
+            return "{$spaces}{$key}: {$strValue}";
         case 'added':
-            return "{$spaces}  + {$key}: {$strValue}";
+            return "{$spaces}+ {$key}: {$strValue}";
         case 'removed':
-            return "{$spaces}  - {$key}: {$strValue}";
+            return "{$spaces}- {$key}: {$strValue}";
         case 'updated':
             return formatUpdated($node, $spaces, $nextLevel);
         default:
@@ -47,7 +49,7 @@ function formatNested(string $key, array $value, string $spaces, int $nextLevel)
 {
     $nested = makeStringsFromDiff($value, $nextLevel);
     $implode = implode("\n", $nested);
-    return "{$spaces}    {$key}: {\n{$implode}\n{$spaces}    }";
+    return "{$spaces}{$key}: {\n{$implode}\n{$spaces}    }";
 }
 
 function formatUpdated(array $node, string $spaces, int $nextLevel): string
@@ -60,7 +62,7 @@ function formatUpdated(array $node, string $spaces, int $nextLevel): string
 
 function getSpaces(int $level): string
 {
-    return str_repeat('    ', $level);
+    return str_repeat(INDENT_SYMBOL, INDENT_SIZE * $level);
 }
 
 function stringifyValue(mixed $value, int $level): mixed

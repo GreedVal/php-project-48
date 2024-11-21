@@ -5,6 +5,7 @@ namespace Differ\Differ;
 use Exception;
 use function Differ\Parser\parse;
 use function Differ\Formatters\makeFormat;
+use function Functional\sort;
 
 function genDiff(string $file1, string $file2, string $formatName = 'stylish'): string
 {
@@ -61,21 +62,8 @@ function getArrayConfig(string $status, string $key, mixed $value1 = null, mixed
 function getSortedUniqueKeys(array $content1, array $content2): array
 {
     $uniqueKeys = array_values(array_unique(array_merge(array_keys($content1), array_keys($content2))));
-    return recursiveSort($uniqueKeys);
-}
 
-function recursiveSort(array $array): array
-{
-    if (count($array) <= 1) {
-        return $array;
-    }
-
-    $first = $array[0];
-    $rest = array_slice($array, 1);
-
-    $sortedRest = recursiveSort($rest);
-
-    return insertSorted($first, $sortedRest);
+    return sort($uniqueKeys, fn($a, $b) => $a <=> $b);
 }
 
 function insertSorted(mixed $element, array $sortedArray): array

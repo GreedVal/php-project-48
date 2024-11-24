@@ -20,7 +20,11 @@ class GenDiffTest extends TestCase
         $fixture2 = $this->getPathToFixture($fixture2Name);
         $expectedPath = $this->getPathToFixture($expectedFileName);
 
-        $this->assertStringEqualsFile($expectedPath, genDiff($fixture1, $fixture2, $format));
+        $expected = $this->normalizeLineEndings(file_get_contents($expectedPath));
+        $actual = $this->normalizeLineEndings(genDiff($fixture1, $fixture2, $format));
+
+        $this->assertSame($expected, $actual);
+
     }
 
     public static function diffDataProvider()
@@ -51,6 +55,11 @@ class GenDiffTest extends TestCase
             ['file1.yml', 'file2.json', 'expectedJson', 'json'],
 
         ];
+    }
+
+    private function normalizeLineEndings($content)
+    {
+        return str_replace("\r\n", "\n", $content);
     }
 
     private function getPathToFixture($fixtureName)

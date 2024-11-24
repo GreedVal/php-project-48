@@ -10,12 +10,12 @@ const SIGN_INDENT_SIZE = 2;
 
 function format(array $diff): string
 {
-    $formattedDiff = makeStringsFromDiff($diff);
+    $formattedDiff = array_filter(makeStringsFromDiff($diff));
     $implode = implode("\n", $formattedDiff);
     return "{\n{$implode}\n}";
 }
 
-function makeStringsFromDiff(array $diff, int $level = 1): array
+function makeStringsFromDiff(array $diff, int $level = 0): array
 {
     $nextLevel = $level + 1;
 

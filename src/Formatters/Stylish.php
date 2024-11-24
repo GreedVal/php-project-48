@@ -6,6 +6,8 @@ use Exception;
 
 const INDENT_SIZE = 4;
 const INDENT_SYMBOL = ' ';
+const SIGN_INDENT_SIZE = 2;
+
 function format(array $diff): string
 {
     $formattedDiff = makeStringsFromDiff($diff);
@@ -15,33 +17,36 @@ function format(array $diff): string
 
 function makeStringsFromDiff(array $diff, int $level = 0): array
 {
-    $spaces = getSpaces($level);
     $nextLevel = $level + 1;
 
-    return array_map(function ($node) use ($spaces, $nextLevel) {
-        return formatNode($node, $spaces, $nextLevel);
+    return array_map(function ($node) use ($level, $nextLevel) {
+        return formatNode($node, $level, $nextLevel);
     }, $diff);
 }
 
-function formatNode(array $node, string $spaces, int $nextLevel): string
+function formatNode(array $node, int $level, int $nextLevel): string
 {
-    ['status' => $status, 'key' => $key] = $node;
+    $baseSpaces = getSpaces($level);
+    $signSpaces = getSpacesWithSign($level);
 
-    $strValue = stringifyValue($node['value1'], $nextLevel);
+    ['status' => $status, 'key' => $key] = $node;
 
     switch ($status) {
         case 'nested':
-            return formatNested($key, $node['value1'], $spaces, $nextLevel);
+            return formatNested($key, $node['value1'], $baseSpaces, $nextLevel);
         case 'same':
-            return "{$spaces}{$key}: {$strValue}";
+            $value = stringifyValue($node['value1'], $nextLevel);
+            return "{$baseSpaces}{$key}: {$value}";
         case 'added':
-            return "{$spaces}+ {$key}: {$strValue}";
+            $value = stringifyValue($node['value1'], $nextLevel);
+            return "{$signSpaces}+ {$key}: {$value}";
         case 'removed':
-            return "{$spaces}- {$key}: {$strValue}";
+            $value = stringifyValue($node['value1'], $nextLevel);
+            return "{$signSpaces}- {$key}: {$value}";
         case 'updated':
-            return formatUpdated($node, $spaces, $nextLevel);
+            return formatUpdated($node, $signSpaces, $nextLevel);
         default:
-            throw new Exception("NAN error stylish format");
+            throw new Exception("Unknown status in stylish format: {$status}");
     }
 }
 
@@ -52,17 +57,25 @@ function formatNested(string $key, array $value, string $spaces, int $nextLevel)
     return "{$spaces}{$key}: {\n{$implode}\n{$spaces}}";
 }
 
-function formatUpdated(array $node, string $spaces, int $nextLevel): string
+function formatUpdated(array $node, string $signSpaces, int $nextLevel): string
 {
     $key = $node['key'];
     $oldValue = stringifyValue($node['value1'], $nextLevel);
     $newValue = stringifyValue($node['value2'], $nextLevel);
-    return "{$spaces}  - {$key}: {$oldValue}\n{$spaces}  + {$key}: {$newValue}";
+
+    $removedLine = "{$signSpaces}- {$key}: {$oldValue}";
+    $addedLine = "{$signSpaces}+ {$key}: {$newValue}";
+    return "{$removedLine}\n{$addedLine}";
 }
 
 function getSpaces(int $level): string
 {
     return str_repeat(INDENT_SYMBOL, INDENT_SIZE * $level);
+}
+
+function getSpacesWithSign(int $level): string
+{
+    return str_repeat(INDENT_SYMBOL, INDENT_SIZE * $level - SIGN_INDENT_SIZE);
 }
 
 function stringifyValue(mixed $value, int $level): mixed
@@ -76,7 +89,7 @@ function stringifyValue(mixed $value, int $level): mixed
     if (is_array($value)) {
         $result = convertArrayToString($value, $level);
         $spaces = getSpaces($level);
-        return "{{$result}\n{$spaces}}";
+        return "{\n{$result}\n{$spaces}}";
     }
 
     return $value;
@@ -85,9 +98,9 @@ function stringifyValue(mixed $value, int $level): mixed
 function convertArrayToString(array $value, int $level): string
 {
     $nextLevel = $level + 1;
-    return implode('', array_map(function ($key) use ($value, $nextLevel) {
+    return implode("\n", array_map(function ($key) use ($value, $nextLevel) {
         $stringValue = stringifyValue($value[$key], $nextLevel);
         $spaces = getSpaces($nextLevel);
-        return "\n{$spaces}{$key}: {$stringValue}";
+        return "{$spaces}{$key}: {$stringValue}";
     }, array_keys($value)));
 }

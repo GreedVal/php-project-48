@@ -15,7 +15,7 @@ function format(array $diff): string
     return "{\n{$implode}\n}";
 }
 
-function makeStringsFromDiff(array $diff, int $level = 0): array
+function makeStringsFromDiff(array $diff, int $level = 1): array
 {
     $nextLevel = $level + 1;
 
@@ -88,7 +88,7 @@ function stringifyValue(mixed $value, int $level): mixed
     }
     if (is_array($value)) {
         $result = convertArrayToString($value, $level);
-        $spaces = getSpaces($level);
+        $spaces = getSpaces($level - 1);
         return "{\n{$result}\n{$spaces}}";
     }
 
@@ -100,7 +100,7 @@ function convertArrayToString(array $value, int $level): string
     $nextLevel = $level + 1;
     return implode("\n", array_map(function ($key) use ($value, $nextLevel) {
         $stringValue = stringifyValue($value[$key], $nextLevel);
-        $spaces = getSpaces($nextLevel);
+        $spaces = getSpaces($nextLevel - 1);
         return "{$spaces}{$key}: {$stringValue}";
     }, array_keys($value)));
 }

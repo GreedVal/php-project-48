@@ -15,7 +15,7 @@ function format(array $diff): string
     return "{\n{$implode}\n}";
 }
 
-function makeStringsFromDiff(array $diff, int $level = 0): array
+function makeStringsFromDiff(array $diff, int $level = 1): array
 {
     $nextLevel = $level + 1;
 

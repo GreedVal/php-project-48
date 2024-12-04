@@ -7,7 +7,7 @@ use Symfony\Component\Yaml\Yaml;
 
 function parse(array $fileData): array
 {
-    switch ($fileData['path']) {
+    switch ($fileData['format']) {
         case 'json':
             return json_decode($fileData['content'], true);
         case 'yml':

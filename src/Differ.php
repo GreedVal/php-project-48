@@ -89,7 +89,7 @@ function getFileContentAndPath(string $file): array
     }
 
     return [
-        'path' => $path,
+        'format' => $path,
         'content' => $content
     ];
 }

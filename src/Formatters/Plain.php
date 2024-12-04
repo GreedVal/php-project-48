@@ -22,13 +22,13 @@ function formatDiff(array $diff, string $path = ''): array
             case 'nested':
                 return formatDiff($value1, "{$path}{$key}.");
             case 'added':
-                $stringifiedValue1 = stringifyValue($value1);
+                $stringifiedValue1 = formatString($value1);
                 return "Property '{$fullPath}' was added with value: {$stringifiedValue1}";
             case 'removed':
                 return "Property '{$fullPath}' was removed";
             case 'updated':
-                $stringifiedValue1 = stringifyValue($value1);
-                $stringifiedValue2 = stringifyValue($value2);
+                $stringifiedValue1 = formatString($value1);
+                $stringifiedValue2 = formatString($value2);
                 return "Property '{$fullPath}' was updated. From {$stringifiedValue1} to {$stringifiedValue2}";
             case 'same':
                 return null;
@@ -42,7 +42,7 @@ function formatDiff(array $diff, string $path = ''): array
     });
 }
 
-function stringifyValue(mixed $value): string
+function formatString(mixed $value): string
 {
     if (is_null($value)) {
         return 'null';
